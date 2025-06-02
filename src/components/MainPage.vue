@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ActivitiesResponse, Activity, useActivitiesStore} from "../store/store";
+import { Activity, useActivitiesStore} from "../store/store";
 import {ref, watch} from "vue";
 import {useRouter} from "vue-router";
 import {ActivityTypes} from "./activityTypes";
@@ -21,7 +21,7 @@ const getActivity = () => {
   type.value && searchParams.append('type', type.value)
 
   fetchData({
-    url: `http://localhost:3000/activity?${searchParams.toString()}`
+    url: `http://localhost:3000/activities/random?${searchParams.toString()}`
     , method: 'GET'
   })
 }

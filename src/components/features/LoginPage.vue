@@ -14,7 +14,7 @@ const errorMessage = ref('');
 const {fetchData, data, error} = useAuth()
 
 const getToken = () => {
-  fetchData({url: `http://localhost:3000/token-visitor`})
+  fetchData({url: `http://localhost:3000/token/visitor`})
 }
 
 const getAuth = () => {
@@ -22,7 +22,7 @@ const getAuth = () => {
     username: username.value,
     password: password.value
   }
-  fetchData({url: `http://localhost:3000/token-admin`, method: 'POST', body: user})
+  fetchData({url: `http://localhost:3000/token/admin`, method: 'POST', body: user})
 }
 
 

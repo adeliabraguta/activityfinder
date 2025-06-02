@@ -31,7 +31,7 @@ const {
 
 const deleteActivity = () => {
   fetchData({
-    url: `http://localhost:3000/delete-activity/${props.activity._id}`, method: 'DELETE'
+    url: `http://localhost:3000/activities/${props.activity._id}`, method: 'DELETE'
   })
   a.deleteActivity(props.activity._id)
   emit('delete')
@@ -46,7 +46,7 @@ const modifyActivity = () => {
     link: link.value,
     cost: cost.value}
   fetchData({
-    url: `http://localhost:3000/update-activity/${props.activity._id}`, method: 'PUT', body: activity
+    url: `http://localhost:3000/activities/${props.activity._id}`, method: 'PUT', body: activity
   })
   isUpdating.value = false
 }

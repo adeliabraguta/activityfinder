@@ -1,22 +1,22 @@
 <script setup lang="ts">
-
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import XIcon from "../icons/XIcon.vue";
 import CheckIcon from "../icons/CheckIcon.vue";
 import {useFetch} from "../../store/useFetch.ts";
-import { useAdminStore} from "../../store/store.ts";
+import ErrorPopup from "../ErrorPopup.vue";
 
-const store = useAdminStore()
 const name = ref()
 const participants = ref()
 const type = ref()
 const accessibility = ref()
 const link = ref()
 const cost = ref()
+const showErrorPopup = ref(false);
+const errorMessage = ref('');
 
 const {
   fetchData
-} = useFetch()
+,error,data} = useFetch()
 const emit = defineEmits(['update'])
 
 const addActivity = () => {
@@ -29,7 +29,7 @@ const addActivity = () => {
     cost: cost.value
   }
   fetchData({
-    url: `http://localhost:3000/post-activity`, method: 'POST', body: activity
+    url: `http://localhost:3000/activities`, method: 'POST', body: activity
   })
   // store.postActivity(activity)
   emit('update')
@@ -49,11 +49,33 @@ const cancel = () => {
   link.value=null
   cost.value=null
 }
+watch(() => data.value, (newData) => {
+  if (error.value) {
+    errorMessage.value = error.value as string
+    showErrorPopup.value = true
+    setTimeout(() => {
+      showErrorPopup.value = false
+    }, 3000)
+    return
+  }
+  if (newData) {
+    errorMessage.value = data.value as string
+    showErrorPopup.value = true
+    setTimeout(() => {
+      showErrorPopup.value = false
+    }, 3000)
+  }
+})
 
 </script>
 
 <template>
   <div>
+    <Transition name="slide-fade">
+      <ErrorPopup :show="showErrorPopup"
+                  :message="errorMessage"
+                  @close="showErrorPopup = false"/>
+    </Transition>
     <div class="activity_container">
       <h2>Add activity</h2>
       <div class="activity_details">
@@ -80,12 +102,12 @@ const cancel = () => {
         </div>
       </div>
       <div class="modify">
-        <span @click="">
+        <button @click="">
           <CheckIcon @click="addActivity"/>
-        </span>
-        <span @click="cancel">
+        </button>
+        <button @click="cancel">
           <XIcon/>
-        </span>
+        </button>
       </div>
     </div>
   </div>
@@ -95,14 +117,19 @@ const cancel = () => {
 .activity_container {
   width: 500px;
   padding: 32px;
-  border: 1px solid var(--color);
+  border: 1px solid #646cff;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 24px;
 }
-
+button{
+  background-color: transparent;
+  &:hover{
+    border: none;
+  }
+}
 .activity_details {
   display: flex;
   flex-direction: column;
@@ -128,9 +155,11 @@ p {
 }
 
 input {
+  border: 1px solid #646cff;
+  background-color: transparent;
   width: initial;
   border-radius: initial;
-  padding: 0 8px;
+  padding: 8px 8px;
 }
 
 .input-1 {

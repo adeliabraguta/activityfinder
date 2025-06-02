@@ -118,3 +118,7 @@ h2 {
   justify-content: center;
   align-items: center;
 }
+
+.navigation{
+  padding: 48px;
+}
